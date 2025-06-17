@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel Principal - Biblioteca</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet" />
+
+  <style>
+    body {
+      background-color: #ffffff; /* Fondo blanco */
+      color: #000000; /* Texto en negro para mejor contraste */
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    .small-box {
+      background-color: #1a1a40; /* Azul oscuro mantenido */
+      color: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      position: relative;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+      transition: transform 0.2s;
+    }
+
+
+    .small-box:hover {
+      transform: scale(1.03);
+    }
+
+    .small-box .icon {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      font-size: 2rem;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .small-box h3 {
+      font-size: 2.2rem;
+      margin: 0;
+    }
+
+    .small-box p {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .fc-toolbar-title, .fc-button {
+      color: white;
+    }
+
+    .fc {
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container-fluid">
+    <div class="row text-center">
+      <!-- ADMINISTRADORES -->
+      <div class="col-md-2 col-6">
+        <div class="small-box">
+          <div class="inner">
+            <h3 id="total-administradores">{{ total_administradores }}</h3>
+            <p>Administradores</p>
+          </div>
+          <div class="icon"><i class="fas fa-user-shield"></i></div>
+        </div>
+      </div>
+
+      <!-- LECTORES -->
+      <div class="col-md-2 col-6">
+        <div class="small-box">
+          <div class="inner">
+            <h3 id="total-lectores">{{ total_lectores }}</h3>
+            <p>Lectores</p>
+          </div>
+          <div class="icon"><i class="fas fa-users"></i></div>
+        </div>
+      </div>
+
+      <!-- LIBROS -->
+      <div class="col-md-2 col-6">
+        <div class="small-box">
+          <div class="inner">
+            <h3 id="total-libros">{{ total_libros }}</h3>
+            <p>Libros</p>
+          </div>
+          <div class="icon"><i class="fas fa-book"></i></div>
+        </div>
+      </div>
+
+      <!-- PRÉSTAMOS -->
+      <div class="col-md-2 col-6">
+        <div class="small-box">
+          <div class="inner">
+            <h3 id="total-prestamos">{{ total_prestamos }}</h3>
+            <p>Préstamos</p>
+          </div>
+          <div class="icon"><i class="fas fa-handshake"></i></div>
+        </div>
+      </div>
+
+      <!-- RESERVAS -->
+      <div class="col-md-2 col-6">
+        <div class="small-box">
+          <div class="inner">
+            <h3 id="total-reservas">{{ total_reservas }}</h3>
+            <p>Reservas</p>
+          </div>
+          <div class="icon"><i class="fas fa-calendar-check"></i></div>
+        </div>
+      </div>
+
+      <!-- REPORTES -->
+      <div class="col-md-2 col-6">
+        <div class="small-box">
+          <div class="inner">
+            <h3 id="total-reportes">{{ total_reportes }}</h3>
+            <p>Reportes</p>
+          </div>
+          <div class="icon"><i class="fas fa-file-alt"></i></div>
+        </div>
+      </div>
+    </div>
+
+<script>
+  async function actualizarTotales() {
+    const res = await fetch('/api/dashboard_data');
+    const data = await res.json();
+    document.getElementById('total-administradores').innerText = data.total_administradores;
+    document.getElementById('total-lectores').innerText = data.total_lectores;
+    document.getElementById('total-libros').innerText = data.total_libros;
+    document.getElementById('total-prestamos').innerText = data.total_prestamos;
+    document.getElementById('total-reservas').innerText = data.total_reservas;
+    document.getElementById('total-reportes').innerText = data.total_reportes;
+  }
+
+  // Actualizar al cargar y cada 30 segundos
+  actualizarTotales();
+  setInterval(actualizarTotales, 30000);
+</script>
+
+
+</body>
+</html>
