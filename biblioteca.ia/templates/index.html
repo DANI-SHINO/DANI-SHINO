@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block title %}Listado de Libros{% endblock %}
+{% block content %}
+    <h2>Libros en la Biblioteca</h2>
+    {% if libros %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ISBN</th>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Estado</th>
+                    <th>Código de Barras</th> {# ¡Esta es la columna clave! #}
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for libro in libros %}
+                <tr>
+                    <td>{{ libro.codigo_barra }}</td>
+                    <td>{{ libro.titulo }}</td>
+                    <td>{{ libro.autor }}</td>
+                    <td>{{ libro.estado }}</td>
+                    <td>
+                        {# Aquí mostramos la imagen del código de barras #}
+                        {# La ruta 'static/barcodes/' es donde tu app.py guarda las imágenes #}
+                        <img src="{{ url_for('static', filename='barcodes/' + libro.codigo_barra + '.png') }}" alt="Código de Barras de {{ libro.titulo }}" width="100">
+                    </td>
+                    <td><a href="{{ url_for('detalle_libro', isbn=libro.codigo_barra) }}">Ver Detalles</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No hay libros registrados aún.</p>
+    {% endif %}
+{% endblock %}

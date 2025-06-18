@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+{% block title %}Registrar por Escaneo Automático{% endblock %}
+{% block content %}
+<h2>Registrar Libro por Escaneo de Código</h2>
+
+<div id="interactive" class="viewport"></div>
+
+<form method="POST" id="registro-form">
+    {{ form.csrf_token }}
+    <div class="form-group">
+        {{ form.isbn.label }} {{ form.isbn(class="form-control", id="isbn") }}
+    </div>
+    <div class="form-group">
+        {{ form.titulo.label }} {{ form.titulo(class="form-control", id="titulo") }}
+    </div>
+    <div class="form-group">
+        {{ form.autor.label }} {{ form.autor(class="form-control", id="autor") }}
+    </div>
+    <div class="form-group">
+        {{ form.cantidad.label }} {{ form.cantidad(class="form-control", id="cantidad") }}
+    </div>
+    <div class="form-group">
+        {{ form.submit(class="btn") }}
+    </div>
+</form>
+
+<script src="{{ url_for('static', filename='js/quagga.min.js') }}"></script>
+<script>
+    function startScanner() {
+        Quagga.init({
+            inputStream : {
+                name : "Live",
+                type : "LiveStream",
+                target: document.querySelector('#interactive'),
+                constraints: {
+                    facingMode: "environment"
+                }
+            },
+            decoder : {
+                readers : ["ean_reader"]
+            },
+            locate: true
+        }, function(err) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            Quagga.start();
+        });
+
+        Quagga.onDetected(function(result) {
+            Quagga.stop();
+            const isbn = result.codeResult.code;
+            console.log("Detectado:", isbn);
+            document.getElementById('isbn').value = isbn;
+
+            fetch(`/api/datos_libro/${isbn}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('titulo').value = data.titulo;
+                        document.getElementById('autor').value = data.autor;
+                    } else {
+                        alert("Libro no encontrado en OpenLibrary");
+                    }
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                });
+        });
+    }
+
+    window.onload = startScanner;
+</script>
+
+<style>
+    #interactive {
+        width: 100%;
+        height: 350px;
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+<!-- Este código es para registrar un libro a partir de un escaneo de código de barras. -->
+<!-- Utiliza QuaggaJS para escanear el código de barras y obtener los datos del libro desde OpenLibrary. -->
+<!-- El formulario se completa automáticamente con los datos obtenidos y se envía al servidor para su registro. -->

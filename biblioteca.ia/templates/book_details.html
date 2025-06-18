@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block title %}Detalles del Libro{% endblock %}
+{% block content %}
+    <h2>Detalles del Libro: {{ libro.titulo }}</h2>
+    <p><strong>ISBN:</strong> {{ libro.codigo_barra }}</p>
+    <p><strong>Autor:</strong> {{ libro.autor }}</p>
+    <p><strong>Estado:</strong> {{ libro.estado | upper }}</p>
+
+    <h3>Código de Barras para Escanear:</h3>
+    {% if barcode_image_path %}
+        {# Muestra la imagen del código de barras más grande aquí #}
+        <img src="{{ url_for('static', filename=barcode_image_path) }}" 
+             alt="Código de Barras de {{ libro.titulo }}" 
+             style="max-width: 300px; height: auto; border: 1px solid #ccc; padding: 5px; background-color: #fff;">
+    {% else %}
+        <p>No se pudo generar la imagen del código de barras para este libro.</p>
+    {% endif %}
+
+    <p>
+        <a href="{{ url_for('escanear_libro') }}" class="btn">Volver a Escanear</a>
+        <a href="{{ url_for('index') }}" class="btn">Volver al Listado</a>
+    </p>
+{% endblock %}

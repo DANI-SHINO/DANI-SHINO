@@ -1,0 +1,152 @@
+{% extends "layout.html" %}
+{% block title %}Escanear Libro con Cámara{% endblock %}
+{% block content %}
+    <h2>Escanear Libro con Cámara</h2>
+
+    <div id="interactive" class="viewport"></div> {# Aquí se renderizará el stream de la cámara #}
+    <div id="result_strip"></div> {# Para mostrar las miniaturas de lo escaneado (opcional) #}
+
+    <div style="margin-top: 20px;">
+        <h3>Resultado del Escaneo:</h3>
+        <p id="scanned-isbn">Esperando ISBN...</p>
+        <p id="book-status">Libro no encontrado.</p>
+        <button id="restart-scan" style="display: none;" class="btn">Escanear Otro</button>
+    </div>
+
+    {# Opcional: El formulario manual si aún lo quieres como fallback #}
+    {# <h3>O Escanear Manualmente:</h3>
+    <form method="POST" action="{{ url_for('escanear_libro') }}">
+        {{ form.csrf_token }}
+        <div class="form-group">
+            {{ form.isbn.label }}<br>
+            {{ form.isbn(class="form-control", autofocus=true) }}
+            {% for error in form.isbn.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form> #}
+
+
+    {# --- JavaScript para QuaggaJS --- #}
+    <script src="{{ url_for('static', filename='js/quagga.min.js') }}"></script>
+    <script>
+        const scannedIsbnElem = document.getElementById('scanned-isbn');
+        const bookStatusElem = document.getElementById('book-status');
+        const restartScanBtn = document.getElementById('restart-scan');
+
+        function startScanner() {
+            // Limpia los resultados anteriores
+            scannedIsbnElem.textContent = 'Esperando ISBN...';
+            bookStatusElem.textContent = 'Libro no encontrado.';
+            restartScanBtn.style.display = 'none';
+
+            Quagga.init({
+                inputStream : {
+                    name : "Live",
+                    type : "LiveStream",
+                    target: document.querySelector('#interactive'), // Selector del elemento donde se renderizará el video
+                    constraints: {
+                        facingMode: "environment" // "environment" para la cámara trasera, "user" para la frontal
+                    }
+                },
+                decoder : {
+                    readers : ["ean_reader"], // Lector para ISBN-13 (EAN-13)
+                    debug: {
+                        drawBoundingBox: true, // Dibujar un cuadro alrededor del código de barras
+                        showFrequency: true,
+                        drawScanline: true,
+                        showPattern: true
+                    }
+                },
+                locate: true // Habilitar la localización del código de barras
+            }, function(err) {
+                if (err) {
+                    console.error("Error al iniciar Quagga:", err);
+                    scannedIsbnElem.textContent = `Error al iniciar la cámara: ${err.message}`;
+                    bookStatusElem.textContent = 'Asegúrate de permitir el acceso a la cámara y que esté funcionando.';
+                    return;
+                }
+                console.log("QuaggaJS inicializado. Escaneando...");
+                Quagga.start();
+            });
+
+            // --- Evento cuando se detecta un código de barras ---
+            Quagga.onDetected(function(result) {
+                Quagga.stop(); // Detener el escáner después de detectar un código para evitar múltiples lecturas
+                const isbn = result.codeResult.code;
+                console.log("Código de barras detectado:", isbn);
+                scannedIsbnElem.textContent = `ISBN Escaneado: ${isbn}`;
+                bookStatusElem.textContent = 'Procesando...';
+                
+                // Enviar el ISBN a Flask (AJAX)
+                fetch('{{ url_for("api_escanear_camara") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ isbn: isbn })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Respuesta de Flask:", data);
+                    if (data.success) {
+                        bookStatusElem.style.color = data.estado_nuevo === 'disponible' ? 'green' : 'red';
+                        bookStatusElem.textContent = `Libro "${data.titulo}" ${data.message}`;
+                    } else {
+                        bookStatusElem.style.color = 'orange';
+                        bookStatusElem.textContent = `Error: ${data.message}`;
+                    }
+                    restartScanBtn.style.display = 'block'; // Mostrar botón para escanear de nuevo
+                })
+                .catch(error => {
+                    console.error('Error al enviar ISBN a Flask:', error);
+                    bookStatusElem.style.color = 'red';
+                    bookStatusElem.textContent = 'Error al comunicar con el servidor.';
+                    restartScanBtn.style.display = 'block';
+                });
+            });
+
+            // --- Evento cuando ocurre un error en la detección (opcional) ---
+            Quagga.onProcessed(function(result) {
+                // Puedes usar esto para depuración o para mostrar el progreso
+                // console.log("Procesando fotograma:", result);
+            });
+        }
+
+        // Iniciar el escáner cuando la página se carga
+        window.onload = startScanner;
+
+        // Reiniciar escáner al hacer clic en el botón
+        restartScanBtn.addEventListener('click', startScanner);
+    </script>
+
+    <style>
+        /* Estilos básicos para el viewport del escáner */
+        #interactive {
+            width: 100%;
+            height: 400px; /* Ajusta según tu preferencia */
+            position: relative;
+            border: 1px solid #ccc;
+            overflow: hidden;
+            background-color: #000; /* Fondo negro para el video */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #interactive video {
+            width: 100%;
+            height: auto;
+            object-fit: contain; /* Ajusta el video para que quepa sin distorsión */
+        }
+
+        /* Estilos para el cuadro de localización (opcional, si activas debug: drawBoundingBox) */
+        .drawingBuffer {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+{% endblock %}
