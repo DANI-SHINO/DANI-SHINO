@@ -1,0 +1,73 @@
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0a0a23;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .profile-box {
+            background-color: #1a1a40;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .profile-box h2 {
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            background-color: #1c1c3c;
+            border: 1px solid #555;
+            color: white;
+        }
+
+        .form-control::placeholder {
+            color: #bbb;
+        }
+
+        .form-control:focus {
+            border-color: #61dafb;
+            box-shadow: 0 0 0 0.2rem rgba(97, 218, 251, 0.25);
+        }
+
+        .profile-pic {
+            border-radius: 50%;
+            border: 2px solid #61dafb;
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border-radius: 25px;
+            border: none;
+            padding: 10px 0;
+            font-weight: bold;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        a {
+            color: #61dafb;
+        }
+
+        a:hover {
+            color: #39c2f7;
+        }
