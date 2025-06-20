@@ -1,0 +1,41 @@
+<h4>Lista de libros registrados</h4>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Título</th>
+      <th>Autor</th>
+      <th>ISBN</th>
+      <th>Categoría</th>
+      <th>Cantidad</th>
+      <th>Disponible</th>
+      <th>Editorial</th>
+      <th>Fecha publicación</th>
+      <th>Acciones</th> <!-- Nueva columna -->
+    </tr>
+  </thead>
+  <tbody>
+    {% for libro in libros %}
+    <tr>
+      <td>{{ libro.id }}</td>
+      <td>{{ libro.titulo }}</td>
+      <td>{{ libro.autor }}</td>
+      <td>{{ libro.isbn }}</td>
+      <td>{{ libro.categoria }}</td>
+      <td>{{ libro.cantidad_total }}</td>
+      <td>{{ libro.cantidad_disponible }}</td>
+      <td>{{ libro.editorial }}</td>
+      <td>{{ libro.fecha_publicacion.strftime('%Y-%m-%d') if libro.fecha_publicacion else '' }}</td>
+      <td>
+        <!-- Botón editar -->
+        <button class="btn btn-sm btn-primary btn-editar" data-id="{{ libro.id }}">Editar</button>
+
+        <!-- Botón eliminar -->
+        <form action="{{ url_for('main.eliminar_libro', libro_id=libro.id) }}" method="post" style="display:inline;" onsubmit="return confirm('¿Estás seguro que quieres eliminar este libro?');">
+          <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

@@ -1,0 +1,58 @@
+<h4 class="mb-3">Lista de Usuarios</h4>
+<table class="table table-hover" id="tabla-usuarios">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Email</th>
+      <th>Rol</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for usuario in usuarios %}
+    <tr data-id="{{ usuario.id }}" data-nombre="{{ usuario.nombre }}" data-email="{{ usuario.email }}" data-rol="{{ usuario.rol }}">
+      <td>{{ usuario.id }}</td>
+      <td>{{ usuario.nombre }}</td>
+      <td>{{ usuario.email }}</td>
+      <td>{{ usuario.rol }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Modal de edición/eliminación -->
+<div class="modal fade" id="modalUsuario" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="formUsuario" class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Usuario</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="usuario-id">
+        <div class="mb-3">
+          <label for="usuario-nombre" class="form-label">Nombre</label>
+          <input type="text" class="form-control" id="usuario-nombre" required>
+        </div>
+        <div class="mb-3">
+          <label for="usuario-email" class="form-label">Email</label>
+          <input type="email" class="form-control" id="usuario-email" required>
+        </div>
+        <div class="mb-3">
+          <label for="usuario-rol" class="form-label">Rol</label>
+          <select class="form-control" id="usuario-rol">
+            <option value="admin">Admin</option>
+            <option value="lector">Lector</option>
+          </select>
+        </div>
+        <div class="alert alert-danger d-none" id="alerta-eliminar">¿Seguro que deseas eliminar este usuario?</div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" id="btn-guardar">Guardar cambios</button>
+        <button type="button" class="btn btn-danger d-none" id="btn-confirmar-eliminar">Eliminar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+

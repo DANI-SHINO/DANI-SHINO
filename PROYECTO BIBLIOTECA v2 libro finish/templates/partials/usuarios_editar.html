@@ -1,0 +1,13 @@
+<h5>Editar roles</h5>
+{% for usuario in usuarios %}
+  {% if usuario.username != 'admin' %}
+    <form action="{{ url_for('main.cambiar_rol', usuario_id=usuario.id) }}" method="POST" class="mb-3 d-flex">
+      <span class="me-3">{{ usuario.username }}</span>
+      <select name="rol" class="form-select me-2" style="width:150px">
+        <option value="lector" {% if usuario.rol == 'lector' %}selected{% endif %}>Lector</option>
+        <option value="bibliotecario" {% if usuario.rol == 'bibliotecario' %}selected{% endif %}>Bibliotecario</option>
+      </select>
+      <button type="submit" class="btn btn-warning btn-sm">Actualizar</button>
+    </form>
+  {% endif %}
+{% endfor %}

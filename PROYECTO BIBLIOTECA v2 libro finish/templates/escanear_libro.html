@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Escanear Libro</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body { font-family: sans-serif; padding: 2rem; }
+        #resultado { margin-top: 1rem; padding: 1rem; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h2> Escanea un libro para registrarlo</h2>
+
+    <form onsubmit="return false;">
+        <input type="text" id="isbn_input" placeholder="Escanea el ISBN..." autofocus class="form-control" style="max-width: 300px;">
+    </form>
+
+    <div id="resultado">
+        <em>Escanea un libro para ver su información aquí.</em>
+    </div>
+
+    <script>
+        const input = document.getElementById('isbn_input');
+        const resultado = document.getElementById('resultado');
+
+        input.addEventListener('input', () => {
+            const isbn = input.value.trim();
+
+            if (isbn.length === 13) {
+                resultado.innerHTML = "<strong>Buscando...</strong>";
+
+                axios.get(`/api/datos_libro/${isbn}`)
+                    .then(res => {
+                        if (res.data.success) {
+                            const datos = res.data;
+                            resultado.innerHTML = `
+                                <h4>📖 ${datos.titulo}</h4>
+                                <p><strong>Autor:</strong> ${datos.autor}</p>
+                                <p><strong>ISBN:</strong> ${isbn}</p>
+                                <p><strong>¿Deseas registrarlo?</strong></p>
+                                <a class="btn btn-success" href="/admin/libros/nuevo?isbn=${isbn}">✅ Sí, registrar</a>
+                            `;
+                        } else {
+                            resultado.innerHTML = `<p>No se encontraron datos.</p>`;
+                        }
+                    })
+                    .catch(err => {
+                        resultado.innerHTML = `
+                            <p><strong>ISBN:</strong> ${isbn}</p>
+                            <p style="color: red;"><strong>❌ No se encontró. ¿Registrar manualmente?</strong></p>
+                            <a href="/admin/libros/nuevo?isbn=${isbn}">Registrar manualmente</a>
+                        `;
+                    });
+
+                input.value = '';
+            }
+        });
+    </script>
+</body>
+</html>
