@@ -1,0 +1,32 @@
+Flask
+Flask-Login
+Flask-SQLAlchemy
+PyMySQL
+Werkzeug
+flask_wtf
+WTForms
+email-validator
+requests
+sqlalchemy
+Flask-Mail
+
+
+# pip install -r requirements.txt
+
+# drop database biblioteca_db;
+
+# create database biblioteca_db;
+
+# INSERT INTO `libros` (`id`, `titulo`, `autor`, `categoria`, `cantidad_total`, `cantidad_disponible`, `fecha_publicacion`, `editorial`, `isbn`, `descripcion`, `fecha_creacion`, `estado`, `portada_url`) VALUES
+# (1, 'Cien años de soledad', 'Gabriel Garcia Marquez', 'historieta', 4, 4, '2009-01-01', 'Vintage Español', '9780307474728', 'XD', '2025-06-26 20:25:44', 'disponible', 'https://covers.openlibrary.org/b/isbn/9780307474728-L.jpg?default=false'),
+# (2, 'La mano peluda', 'Saúl Zaid', 'historieta', 3, 3, '2005-01-01', 'Editores Mexicanos Unidos', '9789681519193', 'xD', '2025-06-26 22:52:31', 'disponible', 'https://covers.openlibrary.org/b/id/12462791-L.jpg'),
+# (3, 'The City & the City', 'China Miéville, China Miéville', 'filosofia', 4, 4, '2025-06-26', 'imusti, Pan Publishing', '9780330534192', 'XD', '2025-06-26 22:53:20', 'disponible', 'https://covers.openlibrary.org/b/id/10091244-L.jpg'),
+# (4, 'Sophie\'s World', 'Jostein Gaarder', 'novela', 4, 4, '1995-01-01', 'Phoenix House, Weidenfeld & Nicolson, Orion Publishing Group, Limited', '9781857992915', 'XD', '2025-06-26 22:54:39', 'disponible', 'https://covers.openlibrary.org/b/id/11550666-L.jpg'),
+# (5, 'Betty Broderick', 'Betty Broderick', 'novela', 3, 3, NULL, 'CreateSpace Independent Publishing Platform', '9781511518628', 'XD', '2025-06-26 22:55:26', 'disponible', 'https://covers.openlibrary.org/b/id/10131349-L.jpg'),
+# (6, 'The Guilty', 'David Baldacci', 'novela', 2, 2, NULL, 'Grand Central Publishing', '9781455586424', 'XD', '2025-06-26 23:02:35', 'disponible', 'https://covers.openlibrary.org/b/id/12659749-L.jpg'),
+# (7, 'Hábitos Atómicos', 'James Clear', 'novela', 5, 5, '2016-01-01', 'Paidos', '9786077476719', 'XD', '2025-06-26 23:03:26', 'disponible', 'https://covers.openlibrary.org/b/id/15073719-L.jpg'),
+# (8, 'Romper el Círculo (It Ends with Us)', 'Colleen Hoover', 'novela', 2, 2, '2022-01-01', 'Editorial Planeta, S. A.', '9786070788147', 'XD', '2025-06-26 23:04:02', 'disponible', 'https://covers.openlibrary.org/b/id/12916665-L.jpg'),
+# (9, 'Harry Potter y la piedra filosofal', 'J. K. Rowling', 'novela', 1, 1, NULL, 'Emecé Editores', '9788478885619', 'XD', '2025-06-26 23:04:41', 'disponible', 'https://covers.openlibrary.org/b/id/14925450-L.jpg'),
+# (10, 'Twisted 1. Twisted Love', 'Ana Huang', 'novela', 3, 3, '2022-01-01', 'Editorial Planeta, S. A.', '9786070793677', 'XD', '2025-06-26 23:05:41', 'disponible', 'https://covers.openlibrary.org/b/id/13180424-L.jpg'),
+# (11, 'Five Nights at Freddy’s', 'Scott Cawthon, Andrea Waggener, Elley Cooper, Kelly Parra', 'cuento', 4, 3, NULL, 'Scholastic Inc.', '9781338576054', 'XD', '2025-06-26 23:06:01', 'disponible', 'https://covers.openlibrary.org/b/id/14822857-L.jpg'),
+# (12, 'The Silver Eyes (Five Nights At Freddy\'s #1)', 'Scott Cawthon, Kira Breed-Wrisley, Kira Breed-Wrisley, Kira Breed-Wrisley Scott Cawthon, Suzanne Eli', 'cuento', 3, 3, '2016-01-01', 'Scholastic', '9781338134377', 'XD', '2025-06-26 23:07:14', 'disponible', 'https://covers.openlibrary.org/b/id/15055364-L.jpg');

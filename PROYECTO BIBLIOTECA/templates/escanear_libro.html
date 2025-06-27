@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Escanear Libro</title>
+    <!-- Bootstrap + Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .scanner-box {
+            background: #1c1e2f;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .form-control {
+            background-color: #2a2d45;
+            border: none;
+            color: #fff;
+        }
+
+        .form-control::placeholder {
+            color: #bbb;
+        }
+
+        .btn-success {
+            background-color: #00c853;
+            border: none;
+        }
+
+        .btn-success:hover {
+            background-color: #00b34f;
+        }
+
+        #resultado {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #2a2d45;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="scanner-box text-center">
+        <h3 class="mb-4">📚 Escanea un libro</h3>
+        <form onsubmit="return false;">
+            <div class="mb-3">
+                <input type="text" id="isbn_input" placeholder="Escanea el ISBN..." autofocus class="form-control">
+            </div>
+        </form>
+
+        <div id="resultado">
+            <em>Escanea un libro para ver su información aquí.</em>
+        </div>
+    </div>
+
+    <script>
+        const input = document.getElementById('isbn_input');
+        const resultado = document.getElementById('resultado');
+
+        input.addEventListener('input', () => {
+            const isbn = input.value.trim();
+
+            if (isbn.length === 13) {
+                resultado.innerHTML = "<strong>Buscando...</strong>";
+
+                axios.get(`/api/datos_libro/${isbn}`)
+                    .then(res => {
+                        if (res.data.success) {
+                            const datos = res.data;
+                            resultado.innerHTML = `
+                                <h4>📖 ${datos.titulo}</h4>
+                                <p><strong>Autor:</strong> ${datos.autor}</p>
+                                <p><strong>ISBN:</strong> ${isbn}</p>
+                                <p><strong>¿Deseas registrarlo?</strong></p>
+                                <a class="btn btn-success" href="/admin/libros/nuevo?isbn=${isbn}">✅ Sí, registrar</a>
+                            `;
+                        } else {
+                            resultado.innerHTML = `<p>No se encontraron datos.</p>`;
+                        }
+                    })
+                    .catch(err => {
+                        resultado.innerHTML = `
+                            <p><strong>ISBN:</strong> ${isbn}</p>
+                            <p style="color: red;"><strong>❌ No se encontró. ¿Registrar manualmente?</strong></p>
+                            <a class="btn btn-secondary" href="/admin/libros/nuevo?isbn=${isbn}">Registrar manualmente</a>
+                        `;
+                    });
+
+                input.value = '';
+            }
+        });
+    </script>
+</body>
+</html>

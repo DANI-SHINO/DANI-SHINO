@@ -1,0 +1,33 @@
+<div class="mb-3">
+  <input type="text" id="busqueda-usuario" class="form-control" placeholder="Buscar por nombre, correo o rol...">
+</div>
+
+<h4 class="mb-3">Lista de Usuarios</h4>
+<table class="table table-hover table-bordered" id="tabla-usuarios">
+  <thead class="table-light">
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Email</th>
+      <th>Rol</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for usuario in usuarios %}
+    <tr data-id="{{ usuario.id }}" data-nombre="{{ usuario.nombre }}" data-email="{{ usuario.correo }}" data-rol="{{ usuario.rol }}">
+      <td>{{ usuario.id }}</td>
+      <td>{{ usuario.nombre }}</td>
+      <td>{{ usuario.correo }}</td>
+      <td>{{ usuario.rol }}</td>
+      <td>
+        <button class="btn btn-sm btn-primary btn-editar-usuario" data-id="{{ usuario.id }}">Editar</button>
+        <button class="btn btn-sm btn-danger btn-eliminar-usuario" data-id="{{ usuario.id }}">Eliminar</button>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<script src="{{ url_for('static', filename='js/usuarios_modal.js') }}"></script>
+

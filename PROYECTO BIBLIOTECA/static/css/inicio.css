@@ -1,0 +1,61 @@
+
+    :root {
+      --card-bg: #1a1a40;
+      --card-hover: #222257;
+      --text-light: #ffffff;
+      --text-soft: rgba(255, 255, 255, 0.6);
+    }
+
+    body {
+      background-color: #f8fafc;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 30px;
+    }
+
+    .dashboard-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+    }
+
+    .small-box {
+      background-color: var(--card-bg);
+      color: var(--text-light);
+      border-radius: 16px;
+      padding: 30px 20px 25px 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      position: relative;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    .small-box:hover {
+      transform: translateY(-6px);
+      background-color: var(--card-hover);
+    }
+
+    .small-box .icon {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 2.3rem;
+      color: rgba(255,255,255,0.2);
+    }
+
+    .small-box h3 {
+      font-size: 2.5rem;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .small-box p {
+      margin: 0;
+      font-size: 1.05rem;
+      color: var(--text-soft);
+    }
+
+    @media (max-width: 576px) {
+      .small-box h3 {
+        font-size: 2rem;
+      }
+    }

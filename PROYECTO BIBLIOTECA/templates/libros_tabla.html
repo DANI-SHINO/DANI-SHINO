@@ -1,0 +1,61 @@
+<div class="mb-3">
+  <input type="text" id="busqueda-libro" class="form-control" placeholder="Buscar por título, autor, ISBN o categoría...">
+</div>
+
+<h4>Lista de libros registrados</h4>
+<table class="table table-striped" id="tabla-libros">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Título</th>
+      <th>Autor</th>
+      <th>ISBN</th>
+      <th>Categoría</th>
+      <th>Cantidad</th>
+      <th>Disponible</th>
+      <th>Editorial</th>
+      <th>Fecha publicación</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for libro in libros %}
+    <tr data-titulo="{{ libro.titulo | lower }}"
+        data-autor="{{ libro.autor | lower }}"
+        data-isbn="{{ libro.isbn | lower }}"
+        data-categoria="{{ libro.categoria | lower }}">
+      <td>{{ libro.id }}</td>
+      <td>{{ libro.titulo }}</td>
+      <td>{{ libro.autor }}</td>
+      <td>{{ libro.isbn }}</td>
+      <td>{{ libro.categoria }}</td>
+      <td>{{ libro.cantidad_total }}</td>
+      <td>{{ libro.cantidad_disponible }}</td>
+      <td>{{ libro.editorial }}</td>
+      <td>{{ libro.fecha_publicacion.strftime('%Y-%m-%d') if libro.fecha_publicacion else '' }}</td>
+      <td>
+        <button class="btn btn-sm btn-primary btn-editar" data-id="{{ libro.id }}">Editar</button>
+        <form action="{{ url_for('main.eliminar_libro', libro_id=libro.id) }}" method="post" style="display:inline;" onsubmit="return confirm('¿Estás seguro?');">
+          <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<script>
+  document.getElementById("busqueda-libro").addEventListener("keyup", function () {
+    const filtro = this.value.toLowerCase();
+    const filas = document.querySelectorAll("#tabla-libros tbody tr");
+
+    filas.forEach(fila => {
+      const titulo = fila.dataset.titulo;
+      const autor = fila.dataset.autor;
+      const isbn = fila.dataset.isbn;
+      const categoria = fila.dataset.categoria;
+      const coincide = titulo.includes(filtro) || autor.includes(filtro) || isbn.includes(filtro) || categoria.includes(filtro);
+      fila.style.display = coincide ? "" : "none";
+    });
+  });
+</script>

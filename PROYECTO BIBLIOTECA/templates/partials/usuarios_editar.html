@@ -1,0 +1,64 @@
+<form id="form-editar-usuario" class="text-start">
+  <input type="hidden" name="id" value="{{ usuario.id }}">
+
+  <div class="mb-3">
+    <label for="nombre" class="form-label">Nombre de usuario</label>
+    <input type="text" name="nombre" class="form-control" value="{{ usuario.username }}">
+  </div>
+
+  <div class="mb-3">
+    <label for="email" class="form-label">Correo electrónico</label>
+    <input type="email" name="email" class="form-control" value="{{ usuario.correo }}">
+  </div>
+
+  <div class="mb-3">
+    <label for="rol" class="form-label">Rol</label>
+    <select class="form-select" name="rol">
+      <option value="lector" {% if usuario.rol == 'lector' %}selected{% endif %}>Lector</option>
+      <option value="bibliotecario" {% if usuario.rol == 'bibliotecario' %}selected{% endif %}>Bibliotecario</option>
+      <option value="administrador" {% if usuario.rol == 'administrador' %}selected{% endif %}>Administrador</option>
+    </select>
+  </div>
+
+  <div class="d-flex justify-content-end gap-2">
+    <button type="button" class="btn btn-secondary" id="btn-cancelar-usuario">Cancelar</button>
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+  </div>
+</form>
+
+<script>
+document.getElementById("form-editar-usuario").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const datos = {
+    id: this.id.value,
+    nombre: this.nombre.value,
+    email: this.email.value,
+    rol: this.rol.value
+  };
+
+  fetch("/admin/usuarios/editar", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(datos)
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.mensaje);
+    const modal = bootstrap.Modal.getInstance(document.getElementById("modalLibro"));
+    modal.hide();
+    location.reload();
+  });
+
+  // Cerrar modal al hacer clic en "Cancelar"
+  document.getElementById("btn-cancelar-usuario").addEventListener("click", function () {
+    const modal = bootstrap.Modal.getInstance(document.getElementById("modalLibro"));
+    modal.hide();
+  });
+
+});
+</script>
+
+

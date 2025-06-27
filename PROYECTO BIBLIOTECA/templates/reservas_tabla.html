@@ -1,0 +1,55 @@
+<h4 class="mb-3">Lista de Reservas</h4>
+
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <th>ID</th>
+        <th>Usuario</th>
+        <th>Libro</th>
+        <th>Fecha de Reserva</th>
+        <th>Fecha de Expiración</th>
+        <th>Estado</th>
+        <th class="text-center">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for reserva in reservas %}
+      <tr>
+        <td>{{ reserva.id }}</td>
+        <td>{{ reserva.usuario.nombre }}</td>
+        <td>{{ reserva.libro.titulo }}</td>
+        <td>{{ reserva.fecha_reserva.strftime('%Y-%m-%d') }}</td>
+        <td>{{ reserva.fecha_expiracion.strftime('%Y-%m-%d') }}</td>
+        <td>
+          {% if reserva.estado == 'activa' %}
+            <span class="badge bg-warning text-dark">Activa</span>
+          {% elif reserva.estado == 'confirmada' %}
+            <span class="badge bg-success">Confirmada</span>
+          {% elif reserva.estado == 'vencida' %}
+            <span class="badge bg-secondary">Vencida</span>
+          {% endif %}
+        </td>
+        <td class="text-center">
+          <div class="btn-group" role="group">
+            <!-- Botón Editar -->
+            <a href="{{ url_for('main.editar_reserva', reserva_id=reserva.id) }}" class="btn btn-sm btn-outline-primary">Editar</a>
+            
+            <!-- Botón Eliminar -->
+            <form action="{{ url_for('main.eliminar_reserva', reserva_id=reserva.id) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Eliminar esta reserva?');">
+              <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+            </form>
+            
+            <!-- Botón Prestar -->
+            {% if reserva.estado == 'activa' %}
+            <form action="{{ url_for('main.prestar_reserva', reserva_id=reserva.id) }}" method="POST" style="display: inline;" onsubmit="return confirm('¿Prestar este libro ahora?');">
+              <button type="submit" class="btn btn-sm btn-outline-success">Prestar</button>
+            </form>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

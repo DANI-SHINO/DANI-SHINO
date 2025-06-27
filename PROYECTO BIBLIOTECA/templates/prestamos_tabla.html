@@ -1,0 +1,50 @@
+<h4 class="mb-3">Lista de Préstamos</h4>
+
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <th>ID</th>
+        <th>Usuario</th>
+        <th>Libro</th>
+        <th>Fecha de Préstamo</th>
+        <th>Fecha de Devolución</th>
+        <th>Estado</th>
+        <th class="text-center">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for prestamo in prestamos %}
+      <tr>
+        <td>{{ prestamo.id }}</td>
+        <td>{{ prestamo.usuario.nombre }}</td>
+        <td>{{ prestamo.libro.titulo }}</td>
+        <td>{{ prestamo.fecha_prestamo.strftime('%Y-%m-%d') }}</td>
+        <td>
+          {% if prestamo.fecha_devolucion %}
+            {{ prestamo.fecha_devolucion.strftime('%Y-%m-%d') }}
+          {% else %}
+            <span class="text-muted">Pendiente</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if prestamo.fecha_devolucion %}
+            <span class="badge bg-success">Devuelto</span>
+          {% else %}
+            <span class="badge bg-warning text-dark">En curso</span>
+          {% endif %}
+        </td>
+        <td class="text-center">
+          {% if not prestamo.fecha_devolucion %}
+          <form method="POST" action="{{ url_for('main.devolver_prestamo', prestamo_id=prestamo.id) }}" onsubmit="return confirm('¿Confirmar devolución?');" style="display:inline;">
+            <button type="submit" class="btn btn-sm btn-success">Devolver</button>
+          </form>
+          {% else %}
+            <span class="text-muted">—</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
